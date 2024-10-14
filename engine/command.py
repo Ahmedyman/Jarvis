@@ -2,28 +2,24 @@ import pyttsx3
 import speech_recognition as sr
 import eel
 import time
+
 def speak(text):
     engine = pyttsx3.init('sapi5')
     voices = engine.getProperty('voices')       
     engine.setProperty('voice', voices[0].id) 
     engine.setProperty('rate', 174)
-    eel.DisplayMessage(text)
+    eel.DisplayMessage(text)  # Use DisplayMessage instead of receiverText
     engine.say(text)
-    # eel.receiverText(text)
     engine.runAndWait()
-    
+
 def takecommand():
-
     r = sr.Recognizer()
-
     with sr.Microphone() as source:
         print('listening....')
         eel.DisplayMessage('listening...')
         r.pause_threshold = 1
         r.adjust_for_ambient_noise(source)
-
         audio = r.listen(source, 10, 6)
-
     try:
         print('Recognizing...')
         eel.DisplayMessage('Recognizing...')
@@ -32,58 +28,48 @@ def takecommand():
         eel.DisplayMessage(query)
         time.sleep(2)
     except Exception as e:
+        print(f"Error in takecommand: {str(e)}")
         return ""
-    
     return query.lower()
-@eel.expose #expose means that access now from main.js
-def allCommand(query=None):
-    if query is None:
-        query = takecommand() 
+
+@eel.expose
+def allCommand(message=1):
+    if message == 1:
+        query = takecommand()
+        if not query:
+            print("No command recognized.")
+            return
+        print(f"Query from takecommand: {query}")
+        eel.senderText(query)
+    else:
+        query = message
+        print(f"Query from message: {query}")
+        eel.senderText(query)
 
     try:
-
         if 'open' in query:
             from engine.features import openCommand
             openCommand(query)
-        elif "on youtube" in query:  
+        elif "on youtube" in query:
             from engine.features import playYouTube
-            playYouTube(query)  
-
+            playYouTube(query)
         elif "send a message" in query or "phone call" in query or "video call" in query:
             from engine.features import findContact, whatsApp
-            flag=""
+            flag = ""
             contact_no, name = findContact(query)
-            if(contact_no != 0):
-
-                    if "send a message" in query:
-                        flag = 'message'
-                        speak("what message to send")
-                        query = takecommand()
-                                        
-                    elif "phone call" in query:
-                        flag = 'call'
-                    else:
-                        flag = 'video call'
-                                        
-                    whatsApp(contact_no, query, flag, name)
-    
+            if contact_no != 0:
+                if "send a message" in query:
+                    flag = 'message'
+                    speak("what message to send")
+                    query = takecommand()
+                elif "phone call" in query:
+                    flag = 'call'
+                else:
+                    flag = 'video call'
+                whatsApp(contact_no, query, flag, name)
         else:
-            print("not run ")
-    except:
-        print("Error")        
-    eel.ShowHood()
+            print("Command not recognized.")
+    except Exception as e:
+        print(f"Error during command processing: {str(e)}")
     
-
-
-
-
-        # print("test")
-
-    # # print(message)
-    # if message == 1:
-    #     query = takecommand()
-    #     print(query)
-    #     # eel.senderText(query)
-    # else:
-    #     query = message
-    #     # eel.senderText(query) 
+    eel.ShowHood()

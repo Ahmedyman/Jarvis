@@ -16,19 +16,19 @@ $(document).ready(function () {
   }
 
   // Handle sending text messages
-  // eel.expose(senderText)
-  // function senderText(message) {
-  //   var chatBox = document.getElementById("chat-canvas-body");
-  //   if (message.trim() !== "") {
-  //     chatBox.innerHTML += `
-  //     <div class="row justify-content-end mb-4">
-  //       <div class="width-size">
-  //         <div class="sender_message">${message}</div>
-  //       </div>
-  //     </div>`;
+  eel.expose(senderText)
+  function senderText(message) {
+    var chatBox = document.getElementById("chat-canvas-body");
+    if (message.trim() !== "") {
+      chatBox.innerHTML += `
+      <div class="row justify-content-end mb-4">
+        <div class="width-size">
+          <div class="sender_message">${message}</div>
+        </div>
+      </div>`;
       
-  //     // Scroll to the bottom of the chat box
-  //     chatBox.scrollTop = chatBox.scrollHeight;
-  //   }
-  // }
+      // Scroll to the bottom of the chat box
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  }
 });
