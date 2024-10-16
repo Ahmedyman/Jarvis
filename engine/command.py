@@ -4,6 +4,7 @@ import eel
 import time
 
 def speak(text):
+    text = str(text)
     engine = pyttsx3.init('sapi5')
     voices = engine.getProperty('voices')       
     engine.setProperty('voice', voices[0].id) 
@@ -23,7 +24,7 @@ def takecommand():
     try:
         print('Recognizing...')
         eel.DisplayMessage('Recognizing...')
-        query = r.recognize_google(audio, language='en')
+        query = r.recognize_google(audio, language='en-ar')
         print(f'User said: {query}') 
         eel.DisplayMessage(query)
         time.sleep(2)
@@ -68,8 +69,10 @@ def allCommand(message=1):
                     flag = 'video call'
                 whatsApp(contact_no, query, flag, name)
         else:
-            print("Command not recognized.")
-    except Exception as e:
-        print(f"Error during command processing: {str(e)}")
+            from engine.features import chatBot
+            chatBot(query)
+            eel.DisplayMessage(query)
+    except:
+        print("error")
     
     eel.ShowHood()

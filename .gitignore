@@ -1,1 +1,5 @@
 /envjarvis
+names_and_numbers.csv
+jarvis.db
+/engine/__pycache__
+/engine/cookies.json

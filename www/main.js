@@ -14,6 +14,14 @@ $(document).ready(function () {
       delay: 50,
     },
   });
+  // Example function to send a message from JavaScript to Python
+  eel.expose(DisplayMessage);
+  function DisplayMessage(message) {
+      // Display the message on the webpage
+      document.getElementById('messageDisplay').innerText = message;
+  }
+  
+
 
   // SiriWave configuration
   var siriWave = new SiriWave({
